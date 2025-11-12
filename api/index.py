@@ -227,9 +227,6 @@ async def export_simulation(episode_id: str):
     return {"markdown": markdown}
 
 
-# Vercel serverless handler
-def handler(request):
-    """Vercel serverless entry point"""
-    import uvicorn
-    return uvicorn.Server(uvicorn.Config(app)).handle(request)
+# Export app for Vercel
+# Vercel will automatically detect and serve the FastAPI app
 
