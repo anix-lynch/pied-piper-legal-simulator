@@ -1,0 +1,168 @@
+[
+  {
+    "clause_id": "BC01",
+    "conflict_type": "board_control",
+    "bias": "VC_bias",
+    "clause_type": "Board Composition",
+    "short_text": "VC holds 3/5 board seats",
+    "full_text": "The Board of Directors shall consist of five (5) members: three (3) designated by holders of Series A Preferred Stock, one (1) designated by Common Stock holders, and one (1) independent member mutually agreed upon.",
+    "explanation": "VCs secure voting majority on all board decisions including CEO removal, budget approval, and strategic direction.",
+    "risk_score_founder": 90,
+    "risk_score_vc": 10
+  },
+  {
+    "clause_id": "BC02",
+    "conflict_type": "board_control",
+    "bias": "Founder_bias",
+    "clause_type": "Board Composition + Dual-Class",
+    "short_text": "Founder retains 60% voting via dual-class shares",
+    "full_text": "Common Stock shall be divided into Class A (10 votes per share, held by Founders) and Class B (1 vote per share). Board consists of 2 VC seats, 2 Founder seats, 1 independent. Founder maintains protective veto on CEO removal.",
+    "explanation": "Founder retains control through super-voting shares, ensuring independence even with minority economic ownership.",
+    "risk_score_founder": 20,
+    "risk_score_vc": 85
+  },
+  {
+    "clause_id": "BC03",
+    "conflict_type": "board_control",
+    "bias": "Neutral",
+    "clause_type": "Board Parity",
+    "short_text": "Board parity 3-3 with rotating chair",
+    "full_text": "Board consists of six (6) members: three (3) designated by Preferred holders, three (3) by Common holders. Chair rotates annually. Supermajority (5/6) required for fundamental changes including CEO removal, budget >$5M, strategic pivots.",
+    "explanation": "Balanced power structure requiring consensus for major decisions, preventing unilateral control by either side.",
+    "risk_score_founder": 50,
+    "risk_score_vc": 50
+  },
+  {
+    "clause_id": "LP01",
+    "conflict_type": "liquidation_event",
+    "bias": "VC_bias",
+    "clause_type": "Liquidation Preference",
+    "short_text": "2x non-participating liquidation preference",
+    "full_text": "Series A holders shall receive 2x their original investment before any distribution to Common stockholders. Non-participating: VCs receive 2x OR their pro-rata share of proceeds, whichever is greater.",
+    "explanation": "VCs guaranteed 2x return before founders see anything, protecting downside risk but limiting upside participation.",
+    "risk_score_founder": 85,
+    "risk_score_vc": 15
+  },
+  {
+    "clause_id": "LP02",
+    "conflict_type": "liquidation_event",
+    "bias": "Founder_bias",
+    "clause_type": "Liquidation Preference",
+    "short_text": "1x participating capped at 3x",
+    "full_text": "Series A holders receive 1x original investment, then participate pro-rata with Common holders, capped at 3x total return. Beyond 3x, Common holders receive all remaining proceeds.",
+    "explanation": "VCs get downside protection plus upside participation, but capped to prevent excessive extraction. Founders benefit in high-exit scenarios.",
+    "risk_score_founder": 40,
+    "risk_score_vc": 45
+  },
+  {
+    "clause_id": "LP03",
+    "conflict_type": "liquidation_event",
+    "bias": "Neutral",
+    "clause_type": "Liquidation Preference + Milestone",
+    "short_text": "1x non-participating, converts to pro-rata on milestones",
+    "full_text": "Series A holders receive 1x preference. Upon achieving: (a) $10M ARR or (b) 50% gross margin sustained 2 quarters, preference automatically converts to pro-rata Common equivalent. VCs and founders share proceeds equally thereafter.",
+    "explanation": "VCs protected in downside, but founder-friendly structure kicks in upon hitting growth milestones, aligning long-term incentives.",
+    "risk_score_founder": 45,
+    "risk_score_vc": 40
+  },
+  {
+    "clause_id": "FV01",
+    "conflict_type": "founder_vesting",
+    "bias": "VC_bias",
+    "clause_type": "Vesting Schedule",
+    "short_text": "4-year vest, 1-year cliff, reset on down-round",
+    "full_text": "Founder shares vest over 4 years with 1-year cliff. Upon any down-round financing or CEO change, unvested shares are forfeited and new 4-year schedule begins. No acceleration on acquisition.",
+    "explanation": "Strict vesting protects VCs from founder departure, but reset clause can be punitive during rough patches.",
+    "risk_score_founder": 95,
+    "risk_score_vc": 5
+  },
+  {
+    "clause_id": "FV02",
+    "conflict_type": "founder_vesting",
+    "bias": "Founder_bias",
+    "clause_type": "Vesting Schedule",
+    "short_text": "Already fully vested with single-trigger acceleration",
+    "full_text": "All Founder shares are 100% vested as of Closing. In the event of acquisition or change of control, any unvested employee/advisor shares accelerate immediately (single-trigger).",
+    "explanation": "Founder maintains full ownership immediately, maximum flexibility. Rare in institutional VC deals.",
+    "risk_score_founder": 5,
+    "risk_score_vc": 95
+  },
+  {
+    "clause_id": "FV03",
+    "conflict_type": "founder_vesting",
+    "bias": "Neutral",
+    "clause_type": "Vesting Schedule",
+    "short_text": "4-year vest, 1-year cliff, double-trigger acceleration",
+    "full_text": "Founder shares vest monthly over 4 years after 1-year cliff. Double-trigger acceleration: 50% vests on acquisition AND termination without cause within 12 months. Board retains right to extend cliff by 6 months if milestones missed, but only once.",
+    "explanation": "Standard VC structure with founder-friendly acceleration protecting against acquirer misconduct.",
+    "risk_score_founder": 50,
+    "risk_score_vc": 45
+  },
+  {
+    "clause_id": "IP01",
+    "conflict_type": "ip_ownership",
+    "bias": "VC_bias",
+    "clause_type": "IP Assignment + Indemnification",
+    "short_text": "Full IP assignment, founder indemnifies company",
+    "full_text": "All intellectual property created by Founders before, during, or after employment is assigned to Company. Founders jointly and severally indemnify Company for any IP litigation arising from prior employment or third-party claims.",
+    "explanation": "Maximum protection for company/VCs, but can expose founders to unlimited personal liability.",
+    "risk_score_founder": 90,
+    "risk_score_vc": 10
+  },
+  {
+    "clause_id": "IP02",
+    "conflict_type": "ip_ownership",
+    "bias": "Founder_bias",
+    "clause_type": "IP Assignment",
+    "short_text": "IP assigned, limited indemnification",
+    "full_text": "IP created for Company is assigned to Company. Founders rep and warrant no prior conflicting obligations. Indemnification capped at 20% of Founder equity value. Company maintains D&O insurance covering IP claims.",
+    "explanation": "Standard IP assignment with capped liability protecting founder personal assets.",
+    "risk_score_founder": 30,
+    "risk_score_vc": 60
+  },
+  {
+    "clause_id": "IP03",
+    "conflict_type": "ip_ownership",
+    "bias": "Neutral",
+    "clause_type": "IP Assignment + Patent Cooperation",
+    "short_text": "Shared IP strategy, mutual defense",
+    "full_text": "Company owns all IP. Founders and Company jointly develop patent strategy with mutual approval. Legal defense costs split 50/50 for IP litigation unless caused by Founder misconduct. Company carries IP litigation insurance with Founders as named insureds.",
+    "explanation": "Balanced approach: company controls IP, but shares risk and strategy with founders.",
+    "risk_score_founder": 50,
+    "risk_score_vc": 50
+  },
+  {
+    "clause_id": "FT01",
+    "conflict_type": "funding_terms",
+    "bias": "VC_bias",
+    "clause_type": "Anti-Dilution",
+    "short_text": "Full ratchet anti-dilution",
+    "full_text": "If Company issues shares at price lower than Series A price, Series A converts at lower price (full ratchet). VCs maintain ownership % regardless of down rounds.",
+    "explanation": "Maximum protection for VCs in down rounds, but severely punishes founders and employees.",
+    "risk_score_founder": 95,
+    "risk_score_vc": 5
+  },
+  {
+    "clause_id": "FT02",
+    "conflict_type": "funding_terms",
+    "bias": "Founder_bias",
+    "clause_type": "Anti-Dilution",
+    "short_text": "No anti-dilution protection",
+    "full_text": "Series A converts at original price. No price adjustment for subsequent rounds. VCs accept dilution risk.",
+    "explanation": "Extremely founder-friendly, rare in practice. VCs typically require some protection.",
+    "risk_score_founder": 10,
+    "risk_score_vc": 90
+  },
+  {
+    "clause_id": "FT03",
+    "conflict_type": "funding_terms",
+    "bias": "Neutral",
+    "clause_type": "Anti-Dilution",
+    "short_text": "Broad-based weighted average",
+    "full_text": "Series A conversion price adjusts using broad-based weighted average formula accounting for total outstanding shares. Excludes: (a) stock option pools, (b) convertible debt, (c) acquisitions.",
+    "explanation": "Industry-standard protection balancing VC downside risk with founder fairness.",
+    "risk_score_founder": 45,
+    "risk_score_vc": 40
+  }
+]
+

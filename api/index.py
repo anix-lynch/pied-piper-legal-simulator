@@ -1,0 +1,235 @@
+"""Vercel serverless API for Pied Piper Legal Simulator"""
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional
+import json
+import os
+from pathlib import Path
+
+# FastAPI app
+app = FastAPI(title="Pied Piper Legal Simulator API", version="1.0.0")
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Load data from JSON files (no DuckDB on serverless)
+DATA_DIR = Path(__file__).parent.parent / "data"
+
+def load_json(filename):
+    """Load JSON data file"""
+    try:
+        with open(DATA_DIR / filename, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading {filename}: {e}")
+        return []
+
+EPISODES = load_json("episodes.json")
+CLAUSES = load_json("clauses.json")
+
+
+class SimulateRequest(BaseModel):
+    episode_id: str
+    mode: str = "all"
+
+
+class ClauseMatchAgent:
+    """Matches episode conflicts to relevant clauses"""
+    
+    def __init__(self, clauses):
+        self.clauses = clauses
+    
+    def match_clauses(self, episode):
+        """Return 3 clause sets: VC win, Founder win, Win-Win"""
+        conflict_type = episode.get("conflict_type")
+        
+        # Filter by conflict type
+        relevant = [c for c in self.clauses if c["conflict_type"] == conflict_type]
+        
+        # Separate by bias
+        return {
+            "vc_win": [c for c in relevant if c["bias"] == "VC_bias"],
+            "founder_win": [c for c in relevant if c["bias"] == "Founder_bias"],
+            "winwin": [c for c in relevant if c["bias"] == "Neutral"]
+        }
+    
+    def get_alignment_score(self, clauses, perspective):
+        """Calculate alignment score (0-100)"""
+        if not clauses:
+            return 50
+        
+        if perspective == "vc":
+            avg_risk = sum(c["risk_score_founder"] for c in clauses) / len(clauses)
+            return int(avg_risk)
+        elif perspective == "founder":
+            avg_risk = sum(c["risk_score_vc"] for c in clauses) / len(clauses)
+            return int(avg_risk)
+        else:
+            avg_f = sum(c["risk_score_founder"] for c in clauses) / len(clauses)
+            avg_v = sum(c["risk_score_vc"] for c in clauses) / len(clauses)
+            return int(100 - abs(avg_f - avg_v))
+
+
+class NarrativeAgent:
+    """Generates trade-off summaries"""
+    
+    def __init__(self):
+        self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        self.client = None
+        
+        if self.api_key:
+            try:
+                import anthropic
+                self.client = anthropic.Anthropic(api_key=self.api_key)
+            except:
+                pass
+    
+    def summarize_scenario(self, episode, clauses, scenario_type):
+        """Generate narrative summary"""
+        # Use fallback for now (Claude optional)
+        return self._fallback_summary(clauses, scenario_type)
+    
+    def _fallback_summary(self, clauses, scenario_type):
+        """Simple summary without AI"""
+        if scenario_type == "vc_win":
+            return "VCs secure maximum control and downside protection. Founders face higher dilution risk and limited control. Trade-off: runway vs autonomy."
+        elif scenario_type == "founder_win":
+            return "Founder retains control and favorable economics. VCs accept higher risk for potential upside. Trade-off: VC comfort vs founder independence."
+        else:
+            return "Balanced structure requiring mutual consent on key decisions. Both sides protected but neither dominates. Trade-off: consensus overhead vs alignment."
+
+
+# Initialize agents
+clause_agent = ClauseMatchAgent(CLAUSES)
+narrative_agent = NarrativeAgent()
+
+
+@app.get("/")
+async def root():
+    """Health check"""
+    return {
+        "app": "Pied Piper Legal Simulator API",
+        "version": "1.0.0",
+        "status": "running",
+        "endpoints": ["/episodes", "/simulate", "/export/{episode_id}"]
+    }
+
+
+@app.get("/episodes")
+async def list_episodes():
+    """List all available episodes"""
+    return {"episodes": EPISODES}
+
+
+@app.post("/simulate")
+async def simulate(request: SimulateRequest):
+    """Generate 3-scenario analysis"""
+    try:
+        # Find episode
+        episode = next((e for e in EPISODES if e["episode_id"] == request.episode_id), None)
+        if not episode:
+            raise HTTPException(status_code=404, detail="Episode not found")
+        
+        # Match clauses
+        clause_sets = clause_agent.match_clauses(episode)
+        
+        # Generate scenarios
+        scenarios = {}
+        alignment_scores = {}
+        
+        for scenario_type, clauses in clause_sets.items():
+            if not clauses:
+                scenarios[scenario_type] = {
+                    "clauses": [],
+                    "narrative": "No clauses available.",
+                    "clause_details": []
+                }
+                alignment_scores[scenario_type] = {"vc": 50, "founder": 50, "balance": 50}
+                continue
+            
+            narrative = narrative_agent.summarize_scenario(episode, clauses, scenario_type)
+            
+            scenarios[scenario_type] = {
+                "clauses": [c["short_text"] for c in clauses],
+                "narrative": narrative,
+                "clause_details": clauses
+            }
+            
+            alignment_scores[scenario_type] = {
+                "vc": clause_agent.get_alignment_score(clauses, "vc"),
+                "founder": clause_agent.get_alignment_score(clauses, "founder"),
+                "balance": clause_agent.get_alignment_score(clauses, "neutral")
+            }
+        
+        return {
+            "episode": episode,
+            "scenarios": scenarios,
+            "alignment_scores": alignment_scores
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/export/{episode_id}")
+async def export_simulation(episode_id: str):
+    """Export simulation as markdown"""
+    episode = next((e for e in EPISODES if e["episode_id"] == episode_id), None)
+    if not episode:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    
+    clause_sets = clause_agent.match_clauses(episode)
+    
+    markdown = f"""# Pied Piper Legal Simulator
+
+## Episode: {episode['title']} ({episode['episode_id']})
+
+**Conflict:** {episode['conflict_type']}  
+**Scene:** {episode['scene']}  
+**Legal Stakes:** {episode['legal_stakes']}
+
+---
+
+"""
+    
+    scenario_names = {
+        "vc_win": "💰 VC WIN",
+        "founder_win": "💡 FOUNDER WIN",
+        "winwin": "🤝 WIN-WIN"
+    }
+    
+    for scenario_type, clauses in clause_sets.items():
+        markdown += f"### {scenario_names.get(scenario_type)}\n\n"
+        
+        if clauses:
+            for clause in clauses:
+                markdown += f"- **{clause['clause_type']}:** {clause['short_text']}\n"
+                markdown += f"  - {clause['explanation']}\n"
+                markdown += f"  - Risk (Founder): {clause['risk_score_founder']}% | Risk (VC): {clause['risk_score_vc']}%\n\n"
+            
+            vc_score = clause_agent.get_alignment_score(clauses, "vc")
+            founder_score = clause_agent.get_alignment_score(clauses, "founder")
+            balance_score = clause_agent.get_alignment_score(clauses, "neutral")
+            
+            markdown += f"**Alignment:** VC: {vc_score}% | Founder: {founder_score}% | Balance: {balance_score}%\n\n"
+        
+        markdown += "---\n\n"
+    
+    return {"markdown": markdown}
+
+
+# Vercel serverless handler
+def handler(request):
+    """Vercel serverless entry point"""
+    import uvicorn
+    return uvicorn.Server(uvicorn.Config(app)).handle(request)
+

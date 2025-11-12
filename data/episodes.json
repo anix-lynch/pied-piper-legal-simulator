@@ -1,0 +1,53 @@
+[
+  {
+    "episode_id": "S02E04",
+    "title": "The Board Coup",
+    "conflict_type": "board_control",
+    "scene": "Raviga attempts to replace Richard as CEO",
+    "founder_action": "Richard negotiates to maintain control",
+    "vc_action": "Laurie pushes for majority board seats",
+    "result": "Power struggle over company direction",
+    "legal_stakes": "Board composition, CEO removal rights, voting control"
+  },
+  {
+    "episode_id": "S01E08",
+    "title": "Optimal Tip-to-Tip Efficiency",
+    "conflict_type": "funding_terms",
+    "scene": "Series A negotiation with Peter Gregory",
+    "founder_action": "Richard seeks fair valuation",
+    "vc_action": "Peter Gregory demands significant equity",
+    "result": "Dilution vs runway trade-off",
+    "legal_stakes": "Valuation, liquidation preferences, anti-dilution"
+  },
+  {
+    "episode_id": "S03E01",
+    "title": "Founder Friendly",
+    "conflict_type": "founder_vesting",
+    "scene": "Erlich's equity gets challenged",
+    "founder_action": "Erlich claims ownership rights",
+    "vc_action": "VCs question founder contributions",
+    "result": "Vesting schedule dispute",
+    "legal_stakes": "Vesting cliffs, acceleration, founder departure"
+  },
+  {
+    "episode_id": "S04E03",
+    "title": "Intellectual Property",
+    "conflict_type": "ip_ownership",
+    "scene": "Hooli claims ownership of Pied Piper algorithm",
+    "founder_action": "Richard defends independent creation",
+    "vc_action": "VCs concerned about litigation risk",
+    "result": "IP lawsuit and founder liability",
+    "legal_stakes": "IP assignment, work-for-hire, indemnification"
+  },
+  {
+    "episode_id": "S02E10",
+    "title": "Two Days of the Condor",
+    "conflict_type": "liquidation_event",
+    "scene": "Acquisition offer from Hooli",
+    "founder_action": "Richard wants to stay independent",
+    "vc_action": "VCs push for liquidity event",
+    "result": "Competing interests in exit",
+    "legal_stakes": "Liquidation preferences, drag-along rights, board approval"
+  }
+]
+

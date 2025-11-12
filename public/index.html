@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧾 Pied Piper Legal Simulator</title>
+    <meta name="description" content="Interactive VC negotiation simulator - Learn term-sheet dynamics through Silicon Valley scenarios">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function App() {
+            const [episodes, setEpisodes] = useState([]);
+            const [selectedEpisode, setSelectedEpisode] = useState(null);
+            const [simulation, setSimulation] = useState(null);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState(null);
+
+            const API_BASE = "https://api.piedpiper.gozeroshot.dev";
+
+            useEffect(() => {
+                fetchEpisodes();
+            }, []);
+
+            const fetchEpisodes = async () => {
+                try {
+                    const res = await fetch(`${API_BASE}/episodes`);
+                    const data = await res.json();
+                    setEpisodes(data.episodes);
+                    if (data.episodes.length > 0) {
+                        setSelectedEpisode(data.episodes[0].episode_id);
+                    }
+                } catch (err) {
+                    setError("Failed to load episodes. API may be initializing...");
+                }
+            };
+
+            const runSimulation = async () => {
+                if (!selectedEpisode) return;
+                
+                setLoading(true);
+                setError(null);
+                
+                try {
+                    const res = await fetch(`${API_BASE}/simulate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            episode_id: selectedEpisode,
+                            mode: 'all'
+                        })
+                    });
+                    
+                    const data = await res.json();
+                    setSimulation(data);
+                } catch (err) {
+                    setError("Simulation failed. Check console for details.");
+                    console.error(err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const exportMarkdown = async () => {
+                if (!selectedEpisode) return;
+                
+                try {
+                    const res = await fetch(`${API_BASE}/export/${selectedEpisode}`);
+                    const data = await res.json();
+                    
+                    // Download as file
+                    const blob = new Blob([data.markdown], { type: 'text/markdown' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `pied-piper-${selectedEpisode}.md`;
+                    a.click();
+                } catch (err) {
+                    console.error("Export failed:", err);
+                }
+            };
+
+            const ScenarioCard = ({ title, icon, color, data, scores }) => (
+                <div className={`${color} rounded-lg p-6 shadow-xl`}>
+                    <h3 className="text-2xl font-bold mb-4">{icon} {title}</h3>
+                    
+                    {data.clauses.length > 0 ? (
+                        <>
+                            <div className="space-y-2 mb-4">
+                                {data.clauses.map((clause, idx) => (
+                                    <div key={idx} className="bg-black bg-opacity-30 p-3 rounded">
+                                        <p className="font-semibold">• {clause}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <div className="bg-black bg-opacity-30 p-4 rounded mb-4">
+                                <p className="italic text-sm">{data.narrative}</p>
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm">VC Alignment:</span>
+                                    <span className="font-bold">{scores.vc}%</span>
+                                </div>
+                                <div className="w-full bg-gray-700 rounded-full h-2">
+                                    <div 
+                                        className="bg-green-500 h-2 rounded-full" 
+                                        style={{ width: `${scores.vc}%` }}
+                                    ></div>
+                                </div>
+                                
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm">Founder Alignment:</span>
+                                    <span className="font-bold">{scores.founder}%</span>
+                                </div>
+                                <div className="w-full bg-gray-700 rounded-full h-2">
+                                    <div 
+                                        className="bg-blue-500 h-2 rounded-full" 
+                                        style={{ width: `${scores.founder}%` }}
+                                    ></div>
+                                </div>
+                                
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm">Balance Score:</span>
+                                    <span className="font-bold">{scores.balance}%</span>
+                                </div>
+                                <div className="w-full bg-gray-700 rounded-full h-2">
+                                    <div 
+                                        className="bg-purple-500 h-2 rounded-full" 
+                                        style={{ width: `${scores.balance}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-gray-400">No clauses available for this scenario.</p>
+                    )}
+                </div>
+            );
+
+            return (
+                <div className="container mx-auto px-4 py-8 max-w-7xl">
+                    {/* Header */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-5xl font-bold mb-2">🧾 Pied Piper Legal Simulator</h1>
+                        <p className="text-gray-400">Interactive VC negotiation scenarios from Silicon Valley</p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            Built by <a href="https://gozeroshot.dev" className="text-blue-400 hover:underline">Anix Lynch</a> • 
+                            AI-powered legal analysis with 3 negotiation outcomes
+                        </p>
+                    </div>
+
+                    {/* Controls */}
+                    <div className="bg-gray-800 rounded-lg p-6 mb-8 shadow-xl">
+                        <div className="flex flex-col md:flex-row gap-4 items-center">
+                            <div className="flex-1">
+                                <label className="block text-sm font-medium mb-2">Select Episode:</label>
+                                <select 
+                                    className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2"
+                                    value={selectedEpisode || ''}
+                                    onChange={(e) => setSelectedEpisode(e.target.value)}
+                                >
+                                    {episodes.map(ep => (
+                                        <option key={ep.episode_id} value={ep.episode_id}>
+                                            {ep.episode_id}: {ep.title}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={runSimulation}
+                                    disabled={loading}
+                                    className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 px-6 py-2 rounded-lg font-semibold transition"
+                                >
+                                    {loading ? "Generating..." : "🔁 Generate"}
+                                </button>
+                                
+                                <button
+                                    onClick={exportMarkdown}
+                                    disabled={!simulation}
+                                    className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 px-6 py-2 rounded-lg font-semibold transition"
+                                >
+                                    💾 Export
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {error && (
+                            <div className="mt-4 bg-red-900 bg-opacity-50 border border-red-700 rounded-lg p-4">
+                                <p className="text-red-200">{error}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Episode Info */}
+                    {simulation && (
+                        <div className="bg-gray-800 rounded-lg p-6 mb-8 shadow-xl">
+                            <h2 className="text-2xl font-bold mb-2">
+                                {simulation.episode.title} ({simulation.episode.episode_id})
+                            </h2>
+                            <p className="text-gray-300 mb-2">
+                                <strong>Conflict:</strong> {simulation.episode.conflict_type}
+                            </p>
+                            <p className="text-gray-300 mb-2">
+                                <strong>Scene:</strong> {simulation.episode.scene}
+                            </p>
+                            <p className="text-gray-300">
+                                <strong>Legal Stakes:</strong> {simulation.episode.legal_stakes}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Three Scenarios */}
+                    {simulation && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <ScenarioCard
+                                title="VC WIN"
+                                icon="💰"
+                                color="bg-gradient-to-br from-red-900 to-red-800"
+                                data={simulation.scenarios.vc_win}
+                                scores={simulation.alignment_scores.vc_win}
+                            />
+                            
+                            <ScenarioCard
+                                title="FOUNDER WIN"
+                                icon="💡"
+                                color="bg-gradient-to-br from-blue-900 to-blue-800"
+                                data={simulation.scenarios.founder_win}
+                                scores={simulation.alignment_scores.founder_win}
+                            />
+                            
+                            <ScenarioCard
+                                title="WIN-WIN"
+                                icon="🤝"
+                                color="bg-gradient-to-br from-green-900 to-green-800"
+                                data={simulation.scenarios.winwin}
+                                scores={simulation.alignment_scores.winwin}
+                            />
+                        </div>
+                    )}
+
+                    {!simulation && !loading && (
+                        <div className="text-center text-gray-500 py-12">
+                            <p>Select an episode and click "Generate" to see 3 negotiation outcomes</p>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
+
