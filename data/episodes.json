@@ -48,6 +48,146 @@
     "vc_action": "VCs push for liquidity event",
     "result": "Competing interests in exit",
     "legal_stakes": "Liquidation preferences, drag-along rights, board approval"
+  },
+  {
+    "episode_id": "S01E01",
+    "title": "Minimum Viable Product",
+    "conflict_type": "seed_funding",
+    "scene": "Erlich pitches Pied Piper to potential investors",
+    "founder_action": "Richard wants to build product first",
+    "vc_action": "Investors demand equity for minimal investment",
+    "result": "Product vs funding timing conflict",
+    "legal_stakes": "Convertible notes, SAFE agreements, founder equity dilution"
+  },
+  {
+    "episode_id": "S01E03",
+    "title": "Articles of Incorporation",
+    "conflict_type": "company_formation",
+    "scene": "Founders argue over company structure and equity",
+    "founder_action": "Richard wants equal splits",
+    "vc_action": "Investors question founding team dynamics",
+    "result": "Internal founder disputes emerge",
+    "legal_stakes": "Cap table setup, founder agreements, vesting schedules"
+  },
+  {
+    "episode_id": "S01E05",
+    "title": "Signal to Noise Ratio",
+    "conflict_type": "series_a_terms",
+    "scene": "Pied Piper prepares for Series A with multiple VC firms",
+    "founder_action": "Richard pushes for better terms",
+    "vc_action": "VCs compete with aggressive valuations",
+    "result": "Term sheet competition and negotiation",
+    "legal_stakes": "Lead investor rights, board seats, protective provisions"
+  },
+  {
+    "episode_id": "S02E01",
+    "title": "Compression",
+    "conflict_type": "technical_disputes",
+    "scene": "Richard and Jian-Yang argue over algorithm ownership",
+    "founder_action": "Richard claims primary invention rights",
+    "vc_action": "VCs concerned about co-founder IP disputes",
+    "result": "Technical founder conflict threatens funding",
+    "legal_stakes": "Co-founder agreements, IP contribution, dispute resolution"
+  },
+  {
+    "episode_id": "S02E03",
+    "title": "Bad Money",
+    "conflict_type": "investor_relations",
+    "scene": "Russ Hanneman becomes problematic investor",
+    "founder_action": "Richard wants to remove toxic investor",
+    "vc_action": "VCs navigate difficult investor relationships",
+    "result": "Toxic investor creates governance issues",
+    "legal_stakes": "Investor rights, board removal, redemption rights"
+  },
+  {
+    "episode_id": "S02E07",
+    "title": "Adult Content",
+    "conflict_type": "platform_liability",
+    "scene": "Pied Piper platform hosts inappropriate content",
+    "founder_action": "Richard wants open platform freedom",
+    "vc_action": "VCs demand content moderation to avoid lawsuits",
+    "result": "Platform liability vs free speech debate",
+    "legal_stakes": "Terms of service, DMCA compliance, indemnification"
+  },
+  {
+    "episode_id": "S03E02",
+    "title": "Meinertzhagen's Haversack",
+    "conflict_type": "acquisition_terms",
+    "scene": "Hooli acquisition negotiations intensify",
+    "founder_action": "Richard demands fair acquisition terms",
+    "vc_action": "VCs push for maximum liquidity",
+    "result": "Acquisition negotiation with competing interests",
+    "legal_stakes": "Earn-outs, retention bonuses, change of control"
+  },
+  {
+    "episode_id": "S03E05",
+    "title": "The Empty Chair",
+    "conflict_type": "governance_conflicts",
+    "scene": "Board vacancy creates power vacuum",
+    "founder_action": "Richard wants to fill board seat",
+    "vc_action": "VCs control board appointment rights",
+    "result": "Board composition and control disputes",
+    "legal_stakes": "Board observer rights, voting thresholds, deadlock resolution"
+  },
+  {
+    "episode_id": "S04E01",
+    "title": "Success Failure",
+    "conflict_type": "scaling_issues",
+    "scene": "Rapid growth creates operational challenges",
+    "founder_action": "Richard wants to maintain culture",
+    "vc_action": "VCs demand professional management",
+    "result": "Scaling conflicts between founders and investors",
+    "legal_stakes": "Key man insurance, management rights, employee equity pool"
+  },
+  {
+    "episode_id": "S04E05",
+    "title": "The Blood Boy",
+    "conflict_type": "competitive_threats",
+    "scene": "Competitor steals Pied Piper technology",
+    "founder_action": "Richard demands aggressive IP protection",
+    "vc_action": "VCs concerned about litigation costs",
+    "result": "IP theft and competitive response",
+    "legal_stakes": "Trade secrets, NDAs, competitive restrictions"
+  },
+  {
+    "episode_id": "S01E07",
+    "title": "Proof of Concept",
+    "conflict_type": "milestone_funding",
+    "scene": "Investors demand product milestones for funding",
+    "founder_action": "Richard wants creative freedom",
+    "vc_action": "VCs require measurable progress",
+    "result": "Product development vs investor expectations",
+    "legal_stakes": "Milestone-based funding, reporting requirements, termination rights"
+  },
+  {
+    "episode_id": "S03E03",
+    "title": "Bachman's Earning's Over-Ride",
+    "conflict_type": "executive_compensation",
+    "scene": "CEO compensation becomes contentious issue",
+    "founder_action": "Richard questions executive pay",
+    "vc_action": "VCs justify market-rate compensation",
+    "result": "Executive compensation and equity disputes",
+    "legal_stakes": "Executive agreements, equity refresh, performance bonuses"
+  },
+  {
+    "episode_id": "S04E02",
+    "title": "Terms of Service",
+    "conflict_type": "platform_governance",
+    "scene": "Platform growth requires governance changes",
+    "founder_action": "Richard wants decentralized approach",
+    "vc_action": "VCs demand centralized control",
+    "result": "Platform governance and control debates",
+    "legal_stakes": "Platform terms, user agreements, content policies"
+  },
+  {
+    "episode_id": "S02E06",
+    "title": "Homicide",
+    "conflict_type": "crisis_management",
+    "scene": "Company crisis threatens survival",
+    "founder_action": "Richard wants to navigate crisis independently",
+    "vc_action": "VCs demand crisis management team",
+    "result": "Crisis response and leadership challenges",
+    "legal_stakes": "Crisis management clauses, insurance coverage, fiduciary duties"
   }
 ]
 
