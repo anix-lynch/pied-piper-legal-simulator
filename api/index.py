@@ -94,16 +94,17 @@ class NarrativeAgent:
     def summarize_scenario(self, episode, clauses, scenario_type):
         """Generate narrative summary"""
         # Use fallback for now (Claude optional)
-        return self._fallback_summary(clauses, scenario_type)
+        episode_title = episode.get("title", "")
+        return self._fallback_summary(clauses, scenario_type, episode_title)
     
-    def _fallback_summary(self, clauses, scenario_type):
-        """Simple summary without AI"""
+    def _fallback_summary(self, clauses, scenario_type, episode_title=""):
+        """Episode-specific summary"""
         if scenario_type == "vc_win":
-            return "VCs secure maximum control and downside protection. Founders face higher dilution risk and limited control. Trade-off: runway vs autonomy."
+            return f"In this {episode_title} scenario, VCs secure maximum control. Founders face higher dilution and limited board power. Like Raviga pushing Richard out - investors hold all the cards. Gavin Belson would be proud."
         elif scenario_type == "founder_win":
-            return "Founder retains control and favorable economics. VCs accept higher risk for potential upside. Trade-off: VC comfort vs founder independence."
+            return f"In this {episode_title} scenario, founders retain control with protective provisions. VCs accept higher risk for upside. Richard walking out of that board meeting with middle fingers raised high - this is that energy."
         else:
-            return "Balanced structure requiring mutual consent on key decisions. Both sides protected but neither dominates. Trade-off: consensus overhead vs alignment."
+            return f"In this {episode_title} scenario, balanced terms require mutual consent. Both sides protected but neither dominates. Rare as a tech unicorn that actually makes money. Everyone pretends they're building the next Google."
 
 
 # Initialize agents
