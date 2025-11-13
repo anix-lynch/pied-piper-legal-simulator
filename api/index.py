@@ -95,16 +95,54 @@ class NarrativeAgent:
         """Generate narrative summary"""
         # Use fallback for now (Claude optional)
         episode_title = episode.get("title", "")
-        return self._fallback_summary(clauses, scenario_type, episode_title)
+        conflict_type = episode.get("conflict_type", "")
+        return self._fallback_summary(clauses, scenario_type, episode_title, conflict_type)
     
-    def _fallback_summary(self, clauses, scenario_type, episode_title=""):
-        """Episode-specific summary"""
-        if scenario_type == "vc_win":
-            return f"In this {episode_title} scenario, VCs secure maximum control. Founders face higher dilution and limited board power. Like Raviga pushing Richard out - investors hold all the cards. Gavin Belson would be proud."
-        elif scenario_type == "founder_win":
-            return f"In this {episode_title} scenario, founders retain control with protective provisions. VCs accept higher risk for upside. Richard walking out of that board meeting with middle fingers raised high - this is that energy."
-        else:
-            return f"In this {episode_title} scenario, balanced terms require mutual consent. Both sides protected but neither dominates. Rare as a tech unicorn that actually makes money. Everyone pretends they're building the next Google."
+    def _fallback_summary(self, clauses, scenario_type, episode_title="", conflict_type=""):
+        """Episode-specific summary with conflict-type awareness"""
+        
+        # Create conflict-specific narratives
+        conflict_narratives = {
+            "board_control": {
+                "vc_win": f"In '{episode_title}', VCs lock down board majority. Founders become employees of their own company. Like when Raviga tried to replace Richard - this is how they do it legally through board composition clauses.",
+                "founder_win": f"In '{episode_title}', founders secure board control with protective provisions. Dual-class shares keep voting power with Richard. This is the 'middle fingers up' moment - founders can't be voted out.",
+                "winwin": f"In '{episode_title}', board seats split evenly with independent tie-breaker. Both sides need to agree on major decisions. It's the fantasy scenario where everyone plays nice."
+            },
+            "funding_terms": {
+                "vc_win": f"In '{episode_title}', VCs demand 2x liquidation preference and full ratchet anti-dilution. Founders get crushed on down-rounds. This is Peter Gregory territory - aggressive terms for runway.",
+                "founder_win": f"In '{episode_title}', founders negotiate 1x participating preferred with broad-based weighted average anti-dilution. They maintain equity and upside. Richard actually wins the valuation game.",
+                "winwin": f"In '{episode_title}', standard market terms with 1x non-participating liquidation preference. Both sides share upside fairly. The mythical 'fair deal' that Silicon Valley pretends exists."
+            },
+            "founder_vesting": {
+                "vc_win": f"In '{episode_title}', VCs impose 4-year vesting with 1-year cliff and no acceleration. Founders lose equity if they leave. Erlich's nightmare - they can take your shares away.",
+                "founder_win": f"In '{episode_title}', founders get reverse vesting with single-trigger acceleration on acquisition. They're protected if VCs push them out. Erlich keeps his 10% no matter what.",
+                "winwin": f"In '{episode_title}', standard vesting with double-trigger acceleration. Both sides protected but neither can exploit the other. The compromise nobody actually likes."
+            },
+            "ip_ownership": {
+                "vc_win": f"In '{episode_title}', all IP assigned to company with VCs controlling licensing. Founders can't use their own tech if they leave. Hooli's wet dream - they own everything.",
+                "founder_win": f"In '{episode_title}', founders retain personal IP rights with exclusive licensing to company. They keep leverage if things go south. Richard proves he built it independently.",
+                "winwin": f"In '{episode_title}', joint IP ownership with fair licensing terms. Both sides can use the tech under specific conditions. Patent attorneys make millions sorting this out."
+            },
+            "liquidation_event": {
+                "vc_win": f"In '{episode_title}', VCs get 2-3x liquidation preference with participation rights. They make money even if founders get nothing. That Hooli acquisition offer? VCs take it all.",
+                "founder_win": f"In '{episode_title}', founders negotiate 1x non-participating preference and anti-cramdown provisions. Common stock actually matters. Richard can say no to bad acquisitions.",
+                "winwin": f"In '{episode_title}', 1.5x participating with cap at 2x investment. Both sides share downside and upside reasonably. The spreadsheet that makes everyone equally unhappy."
+            },
+            "seed_funding": {
+                "vc_win": f"In '{episode_title}', early investors take 25%+ equity for minimal cash. High valuation cap on SAFE notes crushes founders later. That $250K costs you the company.",
+                "founder_win": f"In '{episode_title}', founders raise on favorable SAFE terms with low discount and high cap. They keep ownership and control. Building product first actually works.",
+                "winwin": f"In '{episode_title}', standard Y Combinator SAFE with 20% discount and reasonable cap. Industry-standard seed terms that don't screw anyone. Boring but functional."
+            }
+        }
+        
+        # Get narratives for this conflict type or use generic
+        narratives = conflict_narratives.get(conflict_type, {
+            "vc_win": f"In '{episode_title}', VCs secure maximum control. Founders face higher dilution and limited board power. Investors hold all the cards.",
+            "founder_win": f"In '{episode_title}', founders retain control with protective provisions. VCs accept higher risk for upside. This is that middle-fingers-up energy.",
+            "winwin": f"In '{episode_title}', balanced terms require mutual consent. Both sides protected but neither dominates. The unicorn deal that rarely happens."
+        })
+        
+        return narratives.get(scenario_type, f"Standard {scenario_type} terms for this scenario.")
 
 
 # Initialize agents
