@@ -385,15 +385,16 @@
                         )}
 
                         {/* Pied Piper Context Section */}
-                        <div className="mt-16 mb-8">
-                            <div className="material-card material-shadow p-8">
-                                <div className="text-center mb-8">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <span className="text-3xl">🎭</span>
+                        {simulation && (
+                            <div className="mt-16 mb-8">
+                                <div className="material-card material-shadow p-8">
+                                    <div className="text-center mb-8">
+                                        <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <span className="text-3xl">🎭</span>
+                                        </div>
+                                        <h2 className="text-2xl font-google font-medium text-hooli-text mb-2">What Happened in "{simulation.episode.title}"? 🤔</h2>
+                                        <p className="text-hooli-text-secondary">{simulation.episode.scene}</p>
                                     </div>
-                                    <h2 className="text-2xl font-google font-medium text-hooli-text mb-2">What Does This All Mean? 🤔</h2>
-                                    <p className="text-hooli-text-secondary">If you haven't binge-watched Silicon Valley yet...</p>
-                                </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                     {/* VC Win Drama */}
@@ -401,14 +402,16 @@
                                         <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                                             <span className="text-red-600 text-xl">💰</span>
                                         </div>
-                                        <h3 className="font-google font-medium text-hooli-text mb-3">VC WIN = Gavin Belson Wins 🤑</h3>
+                                        <h3 className="font-google font-medium text-hooli-text mb-3">VC WIN = Investors Take Control 🤑</h3>
                                         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
-                                            <p className="text-red-800 text-sm mb-2 italic">"Not a competition, Richard. Just business."</p>
+                                            <p className="text-red-800 text-sm mb-2 italic">"{simulation.episode.vc_action}"</p>
                                             <p className="text-red-700 text-sm leading-relaxed">
-                                                This is when investors squeeze every last drop of equity from you. Think 25% ownership for a $250K investment,
-                                                plus anti-dilution protection that triggers on down-rounds. Founders get board seats but zero real control.
-                                                It's like dating someone who ghosts you after getting what they want. Congratulations, you're now working for Gavin!
+                                                {simulation.scenarios.vc_win.narrative}
                                             </p>
+                                            <div className="mt-3 pt-3 border-t border-red-300">
+                                                <p className="text-red-600 text-xs font-medium">Real Stakes:</p>
+                                                <p className="text-red-700 text-xs mt-1">{simulation.episode.legal_stakes}</p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -417,15 +420,16 @@
                                         <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                                             <span className="text-green-600 text-xl">💡</span>
                                         </div>
-                                        <h3 className="font-google font-medium text-hooli-text mb-3">FOUNDER WIN = Richard Hendricks Moment ✨</h3>
+                                        <h3 className="font-google font-medium text-hooli-text mb-3">FOUNDER WIN = Founder Keeps Control ✨</h3>
                                         <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-left">
-                                            <p className="text-green-800 text-sm mb-2 italic">"I'm making history tonight."</p>
+                                            <p className="text-green-800 text-sm mb-2 italic">"{simulation.episode.founder_action}"</p>
                                             <p className="text-green-700 text-sm leading-relaxed">
-                                                Founders actually keep meaningful control! Dual-class shares, founder-friendly board seats,
-                                                protective provisions against CEO removal. It's like Richard walking out of that board meeting
-                                                with his middle fingers raised high. You get to build your vision without constantly looking
-                                                over your shoulder. But hey, investors still want their returns... eventually.
+                                                {simulation.scenarios.founder_win.narrative}
                                             </p>
+                                            <div className="mt-3 pt-3 border-t border-green-300">
+                                                <p className="text-green-600 text-xs font-medium">What Richard Wanted:</p>
+                                                <p className="text-green-700 text-xs mt-1">{simulation.episode.result}</p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -434,15 +438,16 @@
                                         <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                                             <span className="text-yellow-600 text-xl">🤝</span>
                                         </div>
-                                        <h3 className="font-google font-medium text-hooli-text mb-3">WIN-WIN = The Unicorn 🦄</h3>
+                                        <h3 className="font-google font-medium text-hooli-text mb-3">WIN-WIN = Balanced Deal 🦄</h3>
                                         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
-                                            <p className="text-yellow-800 text-sm mb-2 italic">"We're not so different, you and I."</p>
+                                            <p className="text-yellow-800 text-sm mb-2 italic">"Everyone wins... theoretically"</p>
                                             <p className="text-yellow-700 text-sm leading-relaxed">
-                                                The holy grail! Balanced terms where everyone gets what they deserve. Shared board control,
-                                                milestone-based dilution, mutual consent on big decisions. It's like Richard and Erlich
-                                                actually getting along for five minutes. Investors get their upside, founders keep their
-                                                soul, and everyone pretends they're building the next Google. Spoiler: It almost never happens.
+                                                {simulation.scenarios.winwin.narrative}
                                             </p>
+                                            <div className="mt-3 pt-3 border-t border-yellow-300">
+                                                <p className="text-yellow-600 text-xs font-medium">The Conflict:</p>
+                                                <p className="text-yellow-700 text-xs mt-1">{simulation.episode.conflict_type.replace(/_/g, ' ').toUpperCase()}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -453,17 +458,21 @@
                                             <span className="text-blue-600">💡</span>
                                         </div>
                                         <div>
-                                            <h4 className="font-google font-medium text-hooli-text mb-2">The Silicon Valley Reality Check</h4>
+                                            <h4 className="font-google font-medium text-hooli-text mb-2">Episode Context: {simulation.episode.title}</h4>
+                                            <p className="text-hooli-text-secondary text-sm leading-relaxed mb-2">
+                                                <strong>The Setup:</strong> {simulation.episode.scene}
+                                            </p>
                                             <p className="text-hooli-text-secondary text-sm leading-relaxed">
-                                                In the real world, most deals land somewhere between VC Win and Win-Win. Pure Founder Wins are rarer than
-                                                a tech unicorn that actually makes money. Remember: Every term sheet is a negotiation. The numbers don't lie,
-                                                but the relationships do matter. And yes, Gavin Belson is still out there somewhere, probably buying another yacht.
+                                                <strong>What Actually Happened:</strong> {simulation.episode.result} This is one of those classic Silicon Valley 
+                                                moments where founders and investors have completely different incentives. The clauses above show how the same conflict 
+                                                could have played out under different term sheet structures.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        )}
                     </div>
                 </div>
             );
