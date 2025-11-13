@@ -157,7 +157,7 @@ async def simulate(request: SimulateRequest):
             narrative = narrative_agent.summarize_scenario(episode, clauses, scenario_type)
             
             scenarios[scenario_type] = {
-                "clauses": [c["short_text"] for c in clauses],
+                "clauses": clauses,  # Return full clause objects, not just short_text
                 "narrative": narrative,
                 "clause_details": clauses
             }

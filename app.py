@@ -115,7 +115,7 @@ async def simulate(request: SimulateRequest):
             balance_score = clause_agent.get_alignment_score(clauses, "neutral")
             
             scenarios[scenario_type] = {
-                "clauses": [c["short_text"] for c in clauses],
+                "clauses": clauses,  # Return full clause objects, not just short_text
                 "narrative": narrative,
                 "clause_details": clauses
             }
