@@ -4,6 +4,12 @@
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge&logo=vercel)](https://public-ndx6vbur4-anix-lynchs-projects.vercel.app)
 
+> **🆕 VC Term-Sheet Advisor (grounded RAG · Gemini on Vertex):** https://pied-piper-advisor-819957310168.us-west1.run.app
+> Ask any term → retrieves the matching clause(s) from `data/clauses.json`, links the Silicon
+> Valley episode by `conflict_type`, then grounds a **Gemini 2.5 Flash** answer with `[clause_id]`
+> citations + founder/VC risk + fund-return direction. DIY retrieval (right-sized for 57 clauses),
+> same grounded pattern as the healthcare service. Entrypoint: `main.py` · `advisor.py`.
+
 ![Pied Piper Legal Simulator Demo](piedpiper_demo.gif)
 
 ---
