@@ -1,5 +1,7 @@
 # 🧾 Pied Piper Legal Simulator
 
+> 🟦 **L2 Action** part of the [L1→L3 healthcare AI platform](https://gozeroshot.dev) — Truth → Features → Signals → Actions → Human adoption. This repo = an agentic legal-scenario advisor.
+
 **AI-powered VC negotiation simulator inspired by Silicon Valley** • Learn term-sheet dynamics through 19+ scripted scenarios
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge&logo=vercel)](https://public-ndx6vbur4-anix-lynchs-projects.vercel.app)
@@ -132,7 +134,7 @@ cd pied-piper-legal-simulator
 
 # Backend API
 python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+source venv/bin/activate  # or `venv\Scriptsctivate` on Windows
 pip install -r requirements.txt
 python app.py
 
@@ -223,4 +225,3 @@ This is an **educational tool** inspired by the TV show Silicon Valley. It is no
 **Made with 💙 for the Silicon Valley community**
 
 *"This guy f***s!" - Russ Hanneman (probably about this simulator)*
-
