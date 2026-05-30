@@ -1,0 +1,14 @@
+.git
+__pycache__
+*.pyc
+.venv
+venv
+.DS_Store
+piedpiper_demo.gif
+public
+frontend
+api
+app.py
+config.py
+src
+test_local.sh

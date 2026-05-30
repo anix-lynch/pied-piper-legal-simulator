@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VC Term-Sheet Advisor · grounded</title>
+<style>
+  :root{
+    --paper:#fbf9f4; --cream:#f3eee3; --ink:#2b2b28; --ink-soft:#6b6760;
+    --line:#e3ddcf; --line-strong:#cabfa6; --coral:#d98b6f; --sea:#5a8b8b;
+    --r:#c2453a; --a:#c98a2b; --g:#4f8a5b; --mono:'SF Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:ui-sans-serif,-apple-system,Inter,sans-serif;line-height:1.5;
+    padding:28px 18px;display:flex;justify-content:center}
+  .wrap{width:100%;max-width:780px}
+  .hdr{border:1.5px solid var(--line-strong);border-radius:14px;background:var(--cream);
+    padding:16px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .hdr h1{font-size:17px;margin:0;letter-spacing:.2px}
+  .hdr .sub{font-size:12px;color:var(--ink-soft);margin-top:3px;font-family:var(--mono)}
+  .pill{font-family:var(--mono);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;
+    border:1.5px solid var(--line-strong);background:var(--paper)}
+  .d{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+  .d.g{background:var(--g)} .d.a{background:var(--a)}
+  .bar{display:flex;gap:8px;margin:18px 0 6px}
+  input{flex:1;min-width:200px;font-family:var(--mono);font-size:14px;padding:11px 13px;
+    border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+  button{cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;padding:0 18px;
+    border-radius:10px;border:1.5px solid var(--coral);background:var(--coral);color:#fff;transition:.1s}
+  button:hover{transform:translateY(-1px)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+  .chip{cursor:pointer;font-family:var(--mono);font-size:11px;padding:4px 9px;border-radius:14px;
+    background:var(--cream);border:1px solid var(--line);color:var(--ink-soft)}
+  .chip:hover{background:var(--sea);color:#fff;border-color:var(--sea)}
+  .card{border:1.5px solid var(--line-strong);border-radius:14px;background:#fff;padding:18px;margin-top:16px}
+  .card .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+  .cid{font-family:var(--mono);font-weight:700}
+  .tag{font-family:var(--mono);font-size:12px;padding:3px 9px;border-radius:14px;font-weight:700}
+  .tag.vc{background:#f3e3dc;color:var(--coral)} .tag.f{background:#dfeae2;color:var(--g)}
+  .risk{margin:14px 0}
+  .risk .row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;margin:4px 0}
+  .risk .lab{width:96px;color:var(--ink-soft)} .risk .num{width:34px;text-align:right;font-weight:700}
+  .track{flex:1;height:9px;border-radius:6px;background:var(--cream);overflow:hidden}
+  .fill{height:100%;border-radius:6px}
+  .ans{margin:14px 0;font-size:14px;line-height:1.6}
+  .ep{font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--cream);
+    border-radius:8px;padding:9px 11px;margin-top:10px}
+  .dir{font-family:var(--mono);font-size:12px;margin-top:10px;font-weight:700}
+  .src{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:10px}
+  .muted{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <h1>⚖️ VC Term-Sheet Advisor</h1>
+      <div class="sub">grounded on 57 clauses + 19 Silicon Valley episodes</div>
+    </div>
+    <span class="pill" id="pill"><span class="d g"></span> grounded · gemini-2.5</span>
+  </div>
+
+  <div class="bar">
+    <input id="q" placeholder="e.g. 2x participating liquidation preference" value="VC wants majority board seats">
+    <button onclick="ask()">Advise →</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div id="out"></div>
+</div>
+
+<script>
+  const API = location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8080';
+  const EX = ['liquidation preference 2x','anti-dilution full ratchet','option pool top-up',
+              'drag-along rights','founder vesting cliff','pro-rata rights'];
+  const chips = document.getElementById('chips');
+  EX.forEach(e=>{const s=document.createElement('span');s.className='chip';s.textContent=e;
+    s.onclick=()=>{document.getElementById('q').value=e;ask();};chips.appendChild(s);});
+
+  function barColor(v){ return v>=70?'var(--r)':v>=40?'var(--a)':'var(--g)'; }
+
+  async function ask(){
+    const q=document.getElementById('q').value.trim();
+    const out=document.getElementById('out');
+    if(q.length<2){out.innerHTML='';return;}
+    out.innerHTML='<div class="card muted">…retrieving clause + grounding on Gemini…</div>';
+    try{
+      const r=await fetch(API+'/api/advise?q='+encodeURIComponent(q)).then(r=>r.json());
+      const vc = r.bias==='VC_bias';
+      out.innerHTML=`
+       <div class="card">
+        <div class="top">
+          <span class="cid">[${r.top_clause}]</span>
+          <span class="tag ${vc?'vc':'f'}">${vc?'VC-favorable':'founder-favorable'}</span>
+        </div>
+        <div class="risk">
+          <div class="row"><span class="lab">Founder risk</span>
+            <span class="track"><span class="fill" style="width:${r.founder_risk}%;background:${barColor(r.founder_risk)}"></span></span>
+            <span class="num">${r.founder_risk}</span></div>
+          <div class="row"><span class="lab">VC risk</span>
+            <span class="track"><span class="fill" style="width:${r.vc_risk}%;background:${barColor(r.vc_risk)}"></span></span>
+            <span class="num">${r.vc_risk}</span></div>
+        </div>
+        <div class="ans">${r.answer}</div>
+        ${r.episode?`<div class="ep">🎬 Silicon Valley · ${r.episode}</div>`:''}
+        <div class="dir">fund-return direction: ${vc?'▲ favorable to VC':'▼ favorable to founder'}</div>
+        <div class="src">grounded on ${r.corpus} · model ${r.model}</div>
+       </div>`;
+      document.getElementById('pill').innerHTML = r.grounded
+        ? '<span class="d g"></span> grounded · '+r.model
+        : '<span class="d a"></span> retrieval-only';
+    }catch(e){ out.innerHTML='<div class="card muted">advisor endpoint unreachable.</div>'; }
+  }
+  ask();
+</script>
+</body>
+</html>
